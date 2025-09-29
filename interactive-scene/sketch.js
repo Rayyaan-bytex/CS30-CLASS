@@ -38,7 +38,7 @@ function snakeGrid() {
 }
 
 function showSnake() {
-  
+  rect()
 }
 
 function food() {
