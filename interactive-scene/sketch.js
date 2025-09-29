@@ -25,6 +25,7 @@ function setup() {
 
 function draw() {
   snakeGrid();
+  food();
 }
 
 function snakeGrid() {
@@ -38,4 +39,13 @@ function snakeGrid() {
 
 function showSnake() {
   
+}
+
+function food() {
+  let newX;
+  let newY;
+  let eaten = true;
+
+  newX = floor(random(0, width/cellSize)) * cellSize;
+   
 }
