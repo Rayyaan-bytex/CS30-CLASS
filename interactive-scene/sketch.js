@@ -18,6 +18,7 @@ let snakeLength = 1;
 let foodX, foodY;
 let direction = "RIGHT";
 let nextDirection = "RIGHT";
+let grow = false;
 
 function setup() {
   createCanvas(600, 600);
@@ -87,4 +88,73 @@ function moveSnake() {
     snakeX[i] = snakeX[i - 1];
     snakeY[i] = snakeY[i - 1];
   }
+
+  if (direction === "UP") {
+    snakeY[0]--;
+  }
+  else if (direction === "DOWN") {
+    snakeY++;
+  }
+  else if (direction === "LEFT") {
+    snakeX[0]--;
+  }
+  else if (direction === "RIGHT") {
+    snakeX[0]++;
+  }
+
+  if (snakeX[0] === foodX && snakeY[0] === foodY) {
+    score++;
+    grow = true;
+    placeFood();
+  }
+
+  if (snakeX[0] < 0 || snakeX[0] >= gridSize || snakeY[0] < 0 || snakeY[0] >= gridSize) {
+    gameState = "GAMEOVER";
+  }
+
+  for (let i = 1; i < snakeLength; i++) {
+    if (snakeX[0] === snakeX[i] && snakeY[0] === snakeY[i]) {
+      gameState = "GAMEOVER";
+    }
+  }
+}
+
+function mousePressed() {
+  if (gameState === "START" || gameState === "GAMEOVER") {
+    resetGame();
+    gameState = "PLAYING"
+  }
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW || key === "w") {
+    nextDirection = "UP";
+  }
+  else if (keyCode === DOWN_ARROW || key === "s") {
+    nextDirection = "DOWN";
+  }
+  else if (keyCode === LEFT_ARROW || key === "a") {
+    nextDirection = "LEFT";
+  }
+  else if (keyCode === RIGHT_ARROW || key === "d") {
+    nextDirection = "RIGHT";
+  }
+}
+
+function mouseWheel(event) {
+  if (event.delta < 0) {
+    speed++;
+  }
+  else if (event.delta > 0) {
+    speed = max(1, speed - 1);
+  }
+}
+
+function resetGame() {
+  snakeX = [5];
+  snakeY = [5];
+  snakeLength = 1;
+  direction = "RIGHT";
+  score = 0;
+  placeFood();
 }
