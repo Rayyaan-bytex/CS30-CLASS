@@ -1,6 +1,6 @@
 // Interactive Scene
 // Rayyaan Chaghtai
-// 9/25/2025
+// 10/3/2025
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -55,16 +55,18 @@ function draw() {
 }
 
 function drawBoard() {
+  strokeWeight(3);
   stroke(0);
   noFill();
   rect(50, 50, gridSize * cellSize, gridSize * cellSize);
 
   fill(0);
   noStroke();
-  textSize(14);
+  textSize(11);
   textAlign(LEFT, TOP);
-  text("Speed: " + speed, 50, 20);
-  text("Score: " + score, 150, 20);
+  text("Speed: " + speed, 35, 20);
+  text("Score: " + score, 90, 20);
+  text("SCROLL MOUSE WHEEL TO ADJUST SPEED!", 145, 20);
 }
 
 function playGame() {
@@ -81,7 +83,7 @@ function playGame() {
 
   // draw snake
   fill(0, 200, 0);
-  for (let i = 0; i < snakeLength; i = i + 1) {
+  for (let i = 0; i < snakeLength; i++) {
     rect(50 + snakeX[i] * cellSize, 50 + snakeY[i] * cellSize, cellSize, cellSize);
   }
 }
@@ -116,7 +118,7 @@ function moveSnake() {
   direction = nextDirection;
 
   // move body
-  for (let i = snakeLength - 1; i > 0; i = i - 1) {
+  for (let i = snakeLength - 1; i > 0; i--) {
     snakeX[i] = snakeX[i - 1];
     snakeY[i] = snakeY[i - 1];
   }
@@ -146,7 +148,7 @@ function moveSnake() {
   if (grow === true) {
     snakeX[snakeLength] = tailX;
     snakeY[snakeLength] = tailY;
-    snakeLength = snakeLength + 1;
+    snakeLength++;
     grow = false;
   }
 
@@ -165,7 +167,7 @@ function moveSnake() {
   }
 
   // self collision
-  for (let i = 1; i < snakeLength; i = i + 1) {
+  for (let i = 1; i < snakeLength; i++) {
     if (snakeX[0] === snakeX[i] && snakeY[0] === snakeY[i]) {
       gameState = "GAMEOVER";
     }
@@ -196,13 +198,13 @@ function keyPressed() {
 
 function mouseWheel(event) {
   if (event.delta < 0) {
-    speed = speed + 1;
+    speed++;
     if (speed > 30) {
       speed = 30;
     }
   }
   else if (event.delta > 0) {
-    speed = speed - 1;
+    speed--;
     if (speed < 1) {
       speed = 1;
     }
