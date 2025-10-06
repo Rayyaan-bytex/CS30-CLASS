@@ -6,7 +6,7 @@
 // I used the mouseWheel function for checking when the player scrolls the mouse wheel and the snake's  
 // speed changes accordingly. I also used the text function for writing instructions, the score, 
 // and messages like START and GAME OVER on the screen but the main WOW me factor is the mouseWheel 
-// function.
+// function. Adding to that, I also used arrays to place and manage the snake body part positions on the board.
 
 
 // declaring global variables
