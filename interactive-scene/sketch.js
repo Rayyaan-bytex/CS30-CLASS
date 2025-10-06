@@ -236,7 +236,7 @@ function insideBox(mx, my) {
   let boxH = 100;
 
   // check if mouse is inside those bounds
-  return (mx > boxX && mx < boxX + boxW && my > boxY && my < boxY + boxH);
+  return mx > boxX && mx < boxX + boxW && my > boxY && my < boxY + boxH;
 }
 
 // works with key presses to change the direction
@@ -290,6 +290,7 @@ function resetGame() {
   direction = "RIGHT";
   nextDirection = "RIGHT";
   score = 0;
+  speed = 0;
   counter = 0;
   grow = false;
 
