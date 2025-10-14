@@ -11,5 +11,13 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background("cyan");
+  startScreen();
+}
+
+function startScreen() {
+  fill("black");
+  textSize(50);
+  textAlign(CENTER, CENTER);
+  text("BALL SORT GAME", width/2, height/2);
 }
