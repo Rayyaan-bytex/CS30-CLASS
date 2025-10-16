@@ -6,7 +6,9 @@
 // - describe what you did to take this project "above and beyond"
 
 let gameState = "START";
-let tubes;
+let numTubes;
+let tubeSpacing = 130;
+let tubeY = 200;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -22,6 +24,7 @@ function startScreen() {
   startButton.style("background-color", "green");
   startButton.style("color", "white");
   startButton.style("font-size", "16px");
+  startButton.style("font-weight", "bold");
   startButton.style("border-radius", "10px");
   startButton.style("padding", "10px 20px");  
   startButton.style("cursor", "pointer");
@@ -29,10 +32,10 @@ function startScreen() {
 } 
 
 // function game() {
-//   for (let i = 0; i < tubes; i++) {
+//   tubes = [];
+
+//   for (let i = 0; i < numTubes; i++) {
 //     tubes.push(
-//       x: 100,
-//       y: ,
 //     )
 //   }
 // }
