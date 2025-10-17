@@ -9,15 +9,26 @@ let gameState = "START";
 let numTubes;
 let tubeSpacing = 130;
 let tubeY = 200;
+let topY = 200;
+let colors = ["red", "green", "blue", "yellow"];
+
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(700, 500);
 }
 
+
 function draw() {
-  background("cyan");
+  background('#72D5E9');
+
+  if (gameState === "START") {
+    game();
+    
+  }
   startScreen();
+  drawStartScreen();
 }
+
 
 function startScreen() {
   startButton = createButton("START GAME");
@@ -28,14 +39,38 @@ function startScreen() {
   startButton.style("border-radius", "10px");
   startButton.style("padding", "10px 20px");  
   startButton.style("cursor", "pointer");
-  startButton.position(width / 2 - 60, height / 2 + 100);
+  startButton.position(width / 2 - 72, height / 2 + 100);
 } 
 
-// function game() {
-//   tubes = [];
 
-//   for (let i = 0; i < numTubes; i++) {
-//     tubes.push(
-//     )
-//   }
-// }
+function drawStartScreen() {
+  textAlign(CENTER, CENTER);
+  fill(0);
+  textSize(36);
+  textStyle(BOLD);
+  text("🎨Ball Sort Game🎨", width/2, height/2 - 120);
+  textSize(25);
+  text("⬇️Click The Button Below To Start⬇️", width/2, height/2 - 60);
+  textSize(25);
+  text("INSTRUCTIONS", width/2, height/2 - 10);
+  textSize(16);
+  text("• Click a tube to pick up a ball\n• Click another tube to drop it\n• Sort them however you like!", width/2, height/2 + 45);
+}
+
+
+function game() {
+  let tubeX = 100 + i * tubeSpacing;
+  let tubeY = topY;
+  let tube;
+  tubes = [];
+
+  for (let i = 0; i < numTubes; i++) {
+    tube = {
+      x: tubeX,
+      y: tubeY,
+      balls: []
+    };
+    tubes.push(tube);
+  }
+}
+
