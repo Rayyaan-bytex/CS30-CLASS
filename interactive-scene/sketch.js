@@ -272,7 +272,7 @@ function mouseWheel(event) {
     }
   }
 
-  // scrolling down increases speed
+  // scrolling down decreases speed
   else if (event.delta > 0) {
     speed--;
     if (speed < 1) {

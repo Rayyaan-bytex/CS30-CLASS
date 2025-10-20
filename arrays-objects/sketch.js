@@ -11,6 +11,7 @@ let tubeSpacing = 130;
 let tubeY = 200;
 let topY = 200;
 let colors = ["red", "green", "blue", "yellow"];
+let tubes = [];
 
 
 function setup() {
@@ -22,14 +23,24 @@ function draw() {
   background('#72D5E9');
 
   if (gameState === "START") {
-    game();
-    
+    drawStartScreen();
   }
+  else if (gameState === "PLAY") {
+    background(220);
+    playGame();
+  }
+  else if (gameState === "WIN") {
+    background(220);
+    playGame();
+  }
+
+
   startScreen();
   drawStartScreen();
 }
 
 
+// button to switch to game
 function startScreen() {
   startButton = createButton("START GAME");
   startButton.style("background-color", "green");
@@ -40,6 +51,7 @@ function startScreen() {
   startButton.style("padding", "10px 20px");  
   startButton.style("cursor", "pointer");
   startButton.position(width / 2 - 72, height / 2 + 100);
+  // startButton.mousePressed()
 } 
 
 
@@ -58,19 +70,44 @@ function drawStartScreen() {
 }
 
 
-function game() {
-  let tubeX = 100 + i * tubeSpacing;
-  let tubeY = topY;
-  let tube;
-  tubes = [];
+function drawGame() {
+  textAlign(CENTER);
+  textSize(22);
+  textStyle(BOLD);
+  fill(0);
+  text("CLICK TUBES TO MOVE BALLS!", width / 2, 40);
 
-  for (let i = 0; i < numTubes; i++) {
-    tube = {
-      x: tubeX,
-      y: tubeY,
-      balls: []
-    };
-    tubes.push(tube);
+  for (let i = 0; i < tubes.length; i++) {
+    drawTube(tubes[i], i);
   }
 }
+
+function drawTube(tube) {
+  // draws the tube
+  stroke(0);
+  strokeWeight(3);
+  noFill();
+  rect(tube.x, tube.y, tubeWidth, tubeHeight, 15);
+
+  noStroke();
+  for (let i = 0; i < tubes.length; i++) {
+
+  }
+}
+
+// function playGame() {
+//   let tubeX = 100 + i * tubeSpacing;
+//   let tubeY = topY;
+//   let tube;
+//   tubes = [];
+
+//   for (let i = 0; i < numTubes; i++) {
+//     tube = {
+//       x: tubeX,
+//       y: tubeY,
+//       balls: []
+//     };
+//     tubes.push(tube);
+//   }
+// }
 
