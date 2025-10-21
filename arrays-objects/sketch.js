@@ -6,12 +6,16 @@
 // - describe what you did to take this project "above and beyond"
 
 let gameState = "START";
-let numTubes;
-let tubeSpacing = 130;
-let tubeY = 200;
-let topY = 200;
-let colors = ["red", "green", "blue", "yellow"];
 let tubes = [];
+let selectedTube = -1;
+let numTubes = 4;
+let tubeSpacing = 130;
+let tubeWidth = 80;
+let tubeHeight = 220;
+let topY = 200;
+let colors = ["red", "green", "blue"];
+let startButton;
+let ballsPerColor = 4;
 
 
 function setup() {
@@ -51,7 +55,7 @@ function startScreen() {
   startButton.style("padding", "10px 20px");  
   startButton.style("cursor", "pointer");
   startButton.position(width / 2 - 72, height / 2 + 100);
-  // startButton.mousePressed()
+  startButton.mousePressed();
 } 
 
 
@@ -82,18 +86,58 @@ function drawGame() {
   }
 }
 
-function drawTube(tube) {
+function drawTube(tube, index) {
   // draws the tube
   stroke(0);
   strokeWeight(3);
   noFill();
   rect(tube.x, tube.y, tubeWidth, tubeHeight, 15);
 
-  noStroke();
-  for (let i = 0; i < tubes.length; i++) {
+  if (selectedTube === index) {
+    strokeWeight(6);
+    stroke('orange');
+    rect(tube.x - 5, tube.y - 5, tubeWidth + 10, tubeHeight + 10, 10);
+  }
 
+  noStroke();
+  for (let i = 0; i < tubes.balls.length; i++) {
+    fill(tube.balls[i]);
+    let spaceBetween = 50;
+    let positionY = tube.y + tubeHeight - 40 - i * spaceBetween;
+    circle(tube.x + tubeWidth / 2, positionY, 45);
   }
 }
+
+function mousePressed() {
+  if (gameState === "PLAY") {
+    for (let i = 0; i < tubes.length; i++) {
+      let t = tubes[i];
+      if (mouseX > t.x && 
+          mouseX < t.x + tubeWidth && 
+          mouseY > t.y && 
+          mouseY < t.y + tubeHeight) {
+        tubeClicked[i];
+      }
+    }
+  }
+}
+
+function tubeClicked(index) {
+  if (selectedTube === -1) {
+    if ([index].tubes.length > 0) {
+      selectedTube = index;
+    }
+    else if (index !== selectedTube) {
+      moveBall(selectedTube, index);
+    }
+    selectedTube = -1;
+  }
+}
+
+function moveBall() {
+  
+}
+
 
 // function playGame() {
 //   let tubeX = 100 + i * tubeSpacing;
@@ -110,4 +154,3 @@ function drawTube(tube) {
 //     tubes.push(tube);
 //   }
 // }
-
