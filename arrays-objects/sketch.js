@@ -100,7 +100,7 @@ function drawTube(tube, index) {
   }
 
   noStroke();
-  for (let i = 0; i < tubes.balls.length; i++) {
+  for (let i = 0; i < tube.balls.length; i++) {
     fill(tube.balls[i]);
     let spaceBetween = 50;
     let positionY = tube.y + tubeHeight - 40 - i * spaceBetween;
@@ -134,23 +134,34 @@ function tubeClicked(index) {
   }
 }
 
-function moveBall() {
-  
+
+function moveBall(fromTube, inTube) {
+  let takeFrom = tubes[fromTube];
+  let putIn = tubes[inTube];
+  let ball = takeFrom.balls.pop();
+
+  if (takeFrom.balls.length === 0) {
+    return false;
+  }
+  if (inTube.balls.length >= ballsPerColor) {
+    return false;
+  }
+  putIn.balls.push(ball);
+  return true;
 }
 
 
-// function playGame() {
-//   let tubeX = 100 + i * tubeSpacing;
-//   let tubeY = topY;
-//   let tube;
-//   tubes = [];
-
-//   for (let i = 0; i < numTubes; i++) {
-//     tube = {
-//       x: tubeX,
-//       y: tubeY,
-//       balls: []
-//     };
-//     tubes.push(tube);
-//   }
-// }
+function checkWin() {
+  for (let tube of tubes) {
+    continue;
+  }
+  if (tube.balls.length !== ballsPerColor) {
+    return true;
+  }
+  let color = tube.balls[0];
+  for (let ball of tube.balls) {
+    if (ball !== color) {
+      return false;
+    }
+  }
+} 
