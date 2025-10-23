@@ -153,15 +153,31 @@ function moveBall(fromTube, inTube) {
 
 function checkWin() {
   for (let tube of tubes) {
-    continue;
-  }
-  if (tube.balls.length !== ballsPerColor) {
-    return true;
-  }
-  let color = tube.balls[0];
-  for (let ball of tube.balls) {
-    if (ball !== color) {
+    if (tube.balls.length === 0) {
+      continue;
+    }
+    
+    if (tube.balls.length !== ballsPerColor) {
       return false;
     }
-  }
-} 
+
+    let color = tube.balls[0];
+    for (let ball of tube.balls) {
+      if (ball !== color) {
+        return false;
+      }
+    }
+  } 
+  return true;
+}
+
+function drawWinScreen() {
+  fill(0, 255, 255, 200);
+  rect(width / 2 - 200, height / 2, - 120, 400, 220, 25);
+  
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textSize(34);
+  textStyle(BOLD);
+  text("🎉 YOU WIN! 🎉", width / 2, height / 2 - 40);
+}
