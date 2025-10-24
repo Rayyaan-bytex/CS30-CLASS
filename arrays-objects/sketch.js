@@ -1,6 +1,6 @@
 // Arrays and Objects - Water/Ball Sorting Game
 // Rayyaan Chaghtai
-// Oct 10, 2025
+// Oct 26, 2025
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
@@ -12,7 +12,7 @@ let numTubes = 4;
 let tubeSpacing = 130;
 let tubeWidth = 80;
 let tubeHeight = 220;
-let topY = 200;
+let tubeTopY = 200; 
 let colors = ["red", "green", "blue"];
 let startButton;
 let ballsPerColor = 4;
@@ -20,6 +20,18 @@ let ballsPerColor = 4;
 
 function setup() {
   createCanvas(700, 500);
+
+  // create the start button once
+  startButton = createButton("START GAME");
+  startButton.style("background-color", "green");
+  startButton.style("color", "white");
+  startButton.style("font-size", "16px");
+  startButton.style("font-weight", "bold");
+  startButton.style("border-radius", "10px");
+  startButton.style("padding", "10px 20px");  
+  startButton.style("cursor", "pointer");
+  startButton.position(width / 2 - 72, height / 2 + 100);
+  startButton.mousePressed(); 
 }
 
 
@@ -31,32 +43,17 @@ function draw() {
   }
   else if (gameState === "PLAY") {
     background(220);
-    playGame();
+    drawGame();
+    if (checkWin()) {
+      gameState = "WIN";
+    }
   }
   else if (gameState === "WIN") {
     background(220);
-    playGame();
+    drawGame();
+    drawWinScreen(); 
   }
-
-
-  startScreen();
-  drawStartScreen();
 }
-
-
-// button to switch to game
-function startScreen() {
-  startButton = createButton("START GAME");
-  startButton.style("background-color", "green");
-  startButton.style("color", "white");
-  startButton.style("font-size", "16px");
-  startButton.style("font-weight", "bold");
-  startButton.style("border-radius", "10px");
-  startButton.style("padding", "10px 20px");  
-  startButton.style("cursor", "pointer");
-  startButton.position(width / 2 - 72, height / 2 + 100);
-  startButton.mousePressed();
-} 
 
 
 function drawStartScreen() {
@@ -64,13 +61,13 @@ function drawStartScreen() {
   fill(0);
   textSize(36);
   textStyle(BOLD);
-  text("🎨Ball Sort Game🎨", width/2, height/2 - 120);
+  text("🎨Ball Sort Game🎨", width / 2, height / 2 - 120);
   textSize(25);
-  text("⬇️Click The Button Below To Start⬇️", width/2, height/2 - 60);
+  text("⬇️Click The Button Below To Start⬇️", width / 2, height / 2 - 60);
   textSize(25);
-  text("INSTRUCTIONS", width/2, height/2 - 10);
+  text("INSTRUCTIONS", width / 2, height / 2 - 10);
   textSize(16);
-  text("• Click a tube to pick up a ball\n• Click another tube to drop it\n• Sort them however you like!", width/2, height/2 + 45);
+  text("• Click a tube to pick up a ball\n• Click another tube to drop it\n• Sort them however you like!", width / 2, height / 2 + 45);
 }
 
 
@@ -85,6 +82,7 @@ function drawGame() {
     drawTube(tubes[i], i);
   }
 }
+
 
 function drawTube(tube, index) {
   // draws the tube
@@ -108,6 +106,7 @@ function drawTube(tube, index) {
   }
 }
 
+
 function mousePressed() {
   if (gameState === "PLAY") {
     for (let i = 0; i < tubes.length; i++) {
@@ -116,56 +115,46 @@ function mousePressed() {
           mouseX < t.x + tubeWidth && 
           mouseY > t.y && 
           mouseY < t.y + tubeHeight) {
-        tubeClicked[i];
+        tubeClicked(i); 
       }
     }
   }
 }
 
+
 function tubeClicked(index) {
   if (selectedTube === -1) {
-    if ([index].tubes.length > 0) {
+    if (tubes[index].balls.length > 0) { 
       selectedTube = index;
     }
-    else if (index !== selectedTube) {
-      moveBall(selectedTube, index);
-    }
+  } 
+  else if (index !== selectedTube) {
+    moveBall(selectedTube, index);
     selectedTube = -1;
   }
 }
 
 
-function moveBall(fromTube, inTube) {
+function moveBall(fromTube, toTube) {
   let takeFrom = tubes[fromTube];
-  let putIn = tubes[inTube];
-  let ball = takeFrom.balls.pop();
+  let putIn = tubes[toTube];
 
-  if (takeFrom.balls.length === 0) {
-    return false;
-  }
-  if (inTube.balls.length >= ballsPerColor) {
-    return false;
-  }
+  if (takeFrom.balls.length === 0) return false;
+  if (putIn.balls.length >= ballsPerColor) return false;
+
+  let ball = takeFrom.balls.pop();
   putIn.balls.push(ball);
   return true;
 }
 
-
 function checkWin() {
   for (let tube of tubes) {
-    if (tube.balls.length === 0) {
-      continue;
-    }
-    
-    if (tube.balls.length !== ballsPerColor) {
-      return false;
-    }
+    if (tube.balls.length === 0) continue;
+    if (tube.balls.length !== ballsPerColor) return false;
 
     let color = tube.balls[0];
     for (let ball of tube.balls) {
-      if (ball !== color) {
-        return false;
-      }
+      if (ball !== color) return false;
     }
   } 
   return true;
@@ -173,7 +162,7 @@ function checkWin() {
 
 function drawWinScreen() {
   fill(0, 255, 255, 200);
-  rect(width / 2 - 200, height / 2, - 120, 400, 220, 25);
+  rect(width / 2 - 200, height / 2 - 100, 400, 220, 25);
   
   fill(0);
   textAlign(CENTER, CENTER);
