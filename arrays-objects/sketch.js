@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+
 let gameState = "START";
 let tubes = [];
 let selectedTube = -1;
@@ -12,7 +13,7 @@ let numTubes = 4;
 let tubeSpacing = 130;
 let tubeWidth = 80;
 let tubeHeight = 220;
-let tubeTopY = 200; 
+let tubeTop = 200; 
 let colors = ["red", "green", "blue"];
 let startButton;
 let ballsPerColor = 4;
@@ -21,7 +22,7 @@ let ballsPerColor = 4;
 function setup() {
   createCanvas(700, 500);
 
-  // create the start button once
+  // create the start button 
   startButton = createButton("START GAME");
   startButton.style("background-color", "green");
   startButton.style("color", "white");
@@ -33,6 +34,15 @@ function setup() {
   startButton.position(width / 2 - 72, height / 2 + 100);
   startButton.mousePressed(); 
 }
+
+
+// function resetGame() {
+//   tubes = [];
+
+//   for (let i = 0; i < numTubes; i++) {
+//     let tubeX = 
+//   }
+// }
 
 
 function draw() {
@@ -139,8 +149,12 @@ function moveBall(fromTube, toTube) {
   let takeFrom = tubes[fromTube];
   let putIn = tubes[toTube];
 
-  if (takeFrom.balls.length === 0) return false;
-  if (putIn.balls.length >= ballsPerColor) return false;
+  if (takeFrom.balls.length === 0) { 
+    return false;
+  }
+  if (putIn.balls.length >= ballsPerColor) {
+    return false;
+  }
 
   let ball = takeFrom.balls.pop();
   putIn.balls.push(ball);
@@ -149,12 +163,17 @@ function moveBall(fromTube, toTube) {
 
 function checkWin() {
   for (let tube of tubes) {
-    if (tube.balls.length === 0) continue;
-    if (tube.balls.length !== ballsPerColor) return false;
-
+    if (tube.balls.length === 0) {
+      continue;
+    }
+    if (tube.balls.length !== ballsPerColor) {
+      return false;
+    }
     let color = tube.balls[0];
     for (let ball of tube.balls) {
-      if (ball !== color) return false;
+      if (ball !== color) {
+        return false;
+      }
     }
   } 
   return true;
@@ -168,5 +187,13 @@ function drawWinScreen() {
   textAlign(CENTER, CENTER);
   textSize(34);
   textStyle(BOLD);
-  text("🎉 YOU WIN! 🎉", width / 2, height / 2 - 40);
+  text("🎉 YOU WIN! 🎉", width / 2, height / 2);
 }
+
+function keyPressed() {
+  if (gameState === "WIN" && (key === "r" || key === "R")) {
+    gameState === "PLAY";
+    drawStartScreen();
+  }
+}
+
