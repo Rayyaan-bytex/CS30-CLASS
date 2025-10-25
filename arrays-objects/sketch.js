@@ -32,17 +32,54 @@ function setup() {
   startButton.style("padding", "10px 20px");  
   startButton.style("cursor", "pointer");
   startButton.position(width / 2 - 72, height / 2 + 100);
-  startButton.mousePressed(); 
+  startButton.mousePressed(startGame); 
 }
 
 
-// function resetGame() {
-//   tubes = [];
+function startGame() {
+  startButton.hide();
+  resetGame();
+  gameState = "PLAY";
+}
 
-//   for (let i = 0; i < numTubes; i++) {
-//     let tubeX = 
-//   }
-// }
+
+function resetGame() {
+  tubes = [];
+
+  // automatically space tubes evenly across the canvas
+  let totalWidth = numTubes * tubeWidth + (numTubes - 1) * 90; // default spacing guess
+  let startX = (width - totalWidth) / 2; // centers tubes
+  let spacing = 90;
+
+  for (let i = 0; i < numTubes; i++) {
+    let x = startX + i * (tubeWidth + spacing);
+    let y = tubeTop;
+    let tube = {};
+    tube.x = x;
+    tube.y = y;
+    tube.balls = [];
+    tubes.push(tube);
+  }
+
+  let allBalls = [];
+  for (let color of colors) {
+    for (let i = 0; i < ballsPerColor; i++) {
+      allBalls.push(color);
+    }
+  }
+
+  shuffle(allBalls, true);
+
+  let index = 0;
+
+  for (let i = 0; i < numTubes - 1; i++) {
+    for (let j = 0; j < ballsPerColor; j++) {
+      let color = allBalls[index];
+      tubes[i].balls.push(color);
+      index++;
+    }
+  }
+}
 
 
 function draw() {
@@ -161,6 +198,7 @@ function moveBall(fromTube, toTube) {
   return true;
 }
 
+
 function checkWin() {
   for (let tube of tubes) {
     if (tube.balls.length === 0) {
@@ -179,6 +217,7 @@ function checkWin() {
   return true;
 }
 
+
 function drawWinScreen() {
   fill(0, 255, 255, 200);
   rect(width / 2 - 200, height / 2 - 100, 400, 220, 25);
@@ -188,12 +227,14 @@ function drawWinScreen() {
   textSize(34);
   textStyle(BOLD);
   text("🎉 YOU WIN! 🎉", width / 2, height / 2);
+
+  textSize(18);
+  text("PRESS 'R' TO  RESTART", width / 2, height / 2 + 30)
 }
 
 function keyPressed() {
   if (gameState === "WIN" && (key === "r" || key === "R")) {
-    gameState === "PLAY";
+    gameState = "START";
     drawStartScreen();
   }
 }
-
