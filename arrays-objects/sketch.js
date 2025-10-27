@@ -128,8 +128,7 @@ function drawStartScreen() {
   text("INSTRUCTIONS", width / 2, height / 2 - 10);
 
   textSize(16);
-  text("• Click a tube to pick up a ball\n• Click another tube to drop it\n• Sort them however you like!",
-       width / 2, height / 2 + 45);
+  text("• Click a tube to pick up a ball\n• Click another tube to drop it\n• Sort them however you like!", width / 2, height / 2 + 45);
 }
 
 
@@ -226,15 +225,20 @@ function moveBall(fromTube, toTube) {
 function checkWin() {
   // Player wins if each tube has all same-color balls or is empty
   for (let tube of tubes) {
-    if (tube.balls.length === 0) continue;
-    if (tube.balls.length !== ballsPerColor) return false;
-
+    if (tube.balls.length === 0) {
+      continue;
+    }
+    if (tube.balls.length !== ballsPerColor) {
+      return false;
+    }
     let color = tube.balls[0];
     for (let ball of tube.balls) {
-      if (ball !== color) return false;
-    }
-  } 
-  return true;
+      if (ball !== color) {
+        return false;
+      }
+    } 
+    return true;
+  }
 }
 
 
