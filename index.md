@@ -9,6 +9,7 @@
 - [Terrain Generation](terrain)
 - [Grid Demo](grid)
 - [Rectangle Neighbours Demo](neighbours)
+- [Game Of Life](game-of-life)
 
 ## Assignments
 - [Interactive Scene](interactive-scene)
