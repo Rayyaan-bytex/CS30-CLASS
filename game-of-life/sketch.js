@@ -1,4 +1,4 @@
-// Game Of Life - Demo
+// Game Of Life
 
 const CELL_SIZE = 20;
 const RENDER_ON_FRAME = 5;
@@ -6,6 +6,11 @@ let grid;
 let rows;
 let cols;
 let autoPlayIsOn = false;
+let gosper;
+
+function preload() {
+  gosper = loadJSON("gosper.json");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -43,43 +48,46 @@ function toggleCell(x, y) {
 }
 
 function keyPressed() {
-  if (key === "r" || key === "R") {
+  if (key === "r") {
     grid = generateRandomGrid(cols, rows);
   }
-  else if (key === "e" || key === "E") {
+  else if (key === "e") {
     grid = generateEmptyGrid(cols, rows);
   }
   else if (key === " ") {
     grid = updateGrid();
   }
-  else if(key === "a" || key === "A") {
+  else if (key === "a") {
     autoPlayIsOn = !autoPlayIsOn;
+  }
+  else if (key === "g") {
+    grid = gosper;
   }
 }
 
 function updateGrid() {
   let nextTurn = generateEmptyGrid(cols, rows);
 
-  // Look at every cell
+  //look at every cell
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       let neighbours = 0;
 
       for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
-          // Don't fall of grid
-          if (x + j >= 0 && x + j < cols && y + i >= 0&& y + i < rows) {
-            neighbours += grid[y + i][x + j];
+          //don't fall off edge of grid
+          if (x+j >= 0 && x+j < cols && y+i >= 0 && y+i < rows) {
+            neighbours += grid[y+i][x+j];
           }
         }
       }
 
-      // Don't count self as neighbour
+      //don't count self as neighbour
       neighbours -= grid[y][x];
 
-      // Apply the rules
+      //apply the rules
       if (grid[y][x] === 1) {
-        // Currently alive
+        //currently alive
         if (neighbours === 2 || neighbours === 3) {
           nextTurn[y][x] = 1;
         }
@@ -89,7 +97,7 @@ function updateGrid() {
       }
 
       if (grid[y][x] === 0) {
-        // Currently Dead
+        //currently dead
         if (neighbours === 3) {
           nextTurn[y][x] = 1;
         }
