@@ -1,4 +1,4 @@
-// Grid-Based Game  -  
+// Grid-Based Game  -  Tetris 
 // Rayyaan Chaghtai
 // November, 2025
 //
@@ -7,7 +7,7 @@
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(300, 900);
 }
 
 function draw() {
