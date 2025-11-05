@@ -1,12 +1,13 @@
-// Grid-Based Game  -  Tetris 
+// Grid-Based Game  -  Tetris Game
 // Rayyaan Chaghtai
-// November, 2025
+// November 12, 2025
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
 
 let gameState = "START";
+let cellSize = 45;
 
 
 function setup() {
@@ -17,8 +18,7 @@ function setup() {
 
 function createStartButton() {
   startButton = createButton("START GAME");
-  startButton.style("background-color", "cyan");
-  startButton.style("color", "black");
+  startButton.style("background-color", "yellow");
   startButton.style("font-size", "16px");
   startButton.style("font-weight", "bold");
   startButton.style("border-radius", "10px");
@@ -32,19 +32,27 @@ function createStartButton() {
 function startGame() {
   startButton.hide();
   drawGame();
+  gameState = "PLAY";
+}
+
+
+function resetGame() {
+
 }
 
 
 function draw() {
-  background("#60eb83");
-  if (gameState === "Start") {
+  background('#56bbe4ff');
+  
+  if (gameState === "START") {
     drawStartScreen();
   }
-  else if (gameState === "Play") {
-    background(220);
+  else if (gameState === "PLAY") {
+    resizeCanvas(450, windowHeight);
+    background('#535364ff');    
     drawGame();   
   }
-  else if (gameState === "Win") {
+  else if (gameState === "LOSE") {
     
   }
 } 
@@ -55,6 +63,7 @@ function drawStartScreen() {
   fill(0);
   textSize(36);
   textStyle(BOLD);
+  fill("white");
   text("🟥Tetris Game🟥", width / 2, height / 2 - 120);
 
   textSize(25);
@@ -69,5 +78,9 @@ function drawStartScreen() {
 
 
 function drawGame() {
-  resizeCanvas(450, windowHeight);
+  strokeWeight(0);
+  stroke(0);
+  noFill();
+  rect(45, 45, griSize * cellSize, griSize * cellSize);
+
 }
