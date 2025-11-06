@@ -8,6 +8,8 @@
 
 let gameState = "START";
 let cellSize = 45;
+let cols = 10;
+let rows;
 
 
 function setup() {
@@ -78,9 +80,11 @@ function drawStartScreen() {
 
 
 function drawGame() {
-  strokeWeight(0);
-  stroke(0);
+  let rows = windowHeight / cellSize;
   noFill();
-  rect(45, 45, griSize * cellSize, griSize * cellSize);
-
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols  ; x++) {
+      square(x * cellSize, y * cellSize, cellSize);
+    }
+  }
 }
