@@ -7,7 +7,7 @@
 
 
 let gameState = "START";
-let cellSize = 45;
+let cellSize = 40;
 let cols = 10;
 let rows;
 let currentPiece;
@@ -17,8 +17,8 @@ let fallTimer = 0;
 let fallSpeed = 30;
 
 
-const T = [[0, 1, 0],
-  [1, 1, 1]];
+const T = [[1, 1, 1],
+  [0, 1, 0]];
 
 const O = [[1, 1],
   [1, 1]];
@@ -32,7 +32,7 @@ const L = [[1, 0],
 const S = [[0, 1, 1],
   [1, 1, 0]];
 
-const tetrominoes = [T, O, I, L, S];  
+const TETROMINOES = [T, O, I, L, S];  
 
 
 function setup() {
@@ -74,7 +74,7 @@ function draw() {
     drawStartScreen();
   }
   else if (gameState === "PLAY") {
-    resizeCanvas(450, windowHeight);
+    resizeCanvas(400, windowHeight);
     background('#535364ff');    
     drawGame();   
 
@@ -119,14 +119,25 @@ function drawGame() {
       square(x * cellSize, y * cellSize, cellSize);
     }
   }
+
+  drawPiece(currentPiece, pieceX, pieceY);
 }
 
 function spawnNewShape() {
-  currentPiece = tetrominoes[Math.floor(random(tetrominoes.length))];
+  currentPiece = TETROMINOES[Math.floor(random(TETROMINOES.length))];
   pieceX = 3;
   pieceY = 0;
 }
 
-function drawPiece() {
+function drawPiece(shape, posX, posY) {
+  fill("purple");
+  noStroke();
 
+  for (let y = 0; y < shape.length; y++) {
+    for (let x = 0; x < shape[y].length; x++) {
+      if (shape[y][x] === 1) {
+        shape[0];
+      }
+    }
+  }
 }
