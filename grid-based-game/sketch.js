@@ -15,6 +15,7 @@ let pieceX;
 let pieceY;
 let fallTimer = 0;
 let fallSpeed = 30;
+let board = [];
 
 
 const T = [[1, 1, 1],
@@ -33,6 +34,8 @@ const S = [[0, 1, 1],
   [1, 1, 0]];
 
 const TETROMINOES = [T, O, I, L, S];  
+
+const COLORS = ["purple", "yellow", "cyan", "orange", "green"];
 
 
 function setup() {
@@ -78,10 +81,16 @@ function draw() {
     background('#535364ff');    
     drawGame();   
 
-    fallTimer++;
-    if (fallTimer > fallSpeed) {
-      pieceY++;
-      fallTimer = 0;
+    if (currentPiece) {
+      if (!atBottom()) {
+        fallTimer++;
+        if (fallTimer > fallSpeed) {
+          pieceY++;
+          fallTimer = 0;
+        }
+      }
+
+      drawPiece(currentPiece, pieceX, pieceY);
     }
 
   }
@@ -89,6 +98,7 @@ function draw() {
     
   }
 } 
+
 
 
 function drawStartScreen() {
@@ -119,25 +129,37 @@ function drawGame() {
       square(x * cellSize, y * cellSize, cellSize);
     }
   }
-
-  drawPiece(currentPiece, pieceX, pieceY);
 }
 
 function spawnNewShape() {
-  currentPiece = TETROMINOES[Math.floor(random(TETROMINOES.length))];
+  let index = Math.floor(random(TETROMINOES.length));
+  currentPiece = TETROMINOES[index];
+  currentColor = COLORS[index];
   pieceX = 3;
   pieceY = 0;
 }
 
 function drawPiece(shape, posX, posY) {
-  fill("purple");
-  noStroke();
+  fill(currentColor);
+  strokeWeight(2.25);
 
   for (let y = 0; y < shape.length; y++) {
     for (let x = 0; x < shape[y].length; x++) {
       if (shape[y][x] === 1) {
-        shape[0];
+        square((posX + x) * cellSize, (posY + y) * cellSize, cellSize);
       }
     }
+  }
+}
+
+function atBottom() {
+  let totalRows = floor(windowHeight / cellSize);
+  let shapeHeight = currentPiece.length;
+
+  if (pieceY + shapeHeight >= totalRows + 1) {
+    return true;
+  }
+  else {
+    return false;
   }
 }
