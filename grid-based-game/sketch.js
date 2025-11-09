@@ -15,7 +15,7 @@ let pieceX;
 let pieceY;
 let fallTimer = 0;
 let fallSpeed = 30;
-let board = [];
+let board;
 
 
 const T = [[1, 1, 1],
@@ -39,7 +39,19 @@ const COLORS = ["purple", "yellow", "cyan", "orange", "green"];
 
 
 function setup() {
-  createCanvas(500, 500 );
+  createCanvas(500, 500);
+
+  board = [];
+  rows = floor(windowHeight / cellSize);
+
+  for (let y = 0; y < rows; y++) {
+    let rows = [];
+    for (let x = 0; x < cols; x++) {
+      rows.push(0);
+    }
+    board.push(rows);
+  }
+
   createStartButton();
 }
 
@@ -89,6 +101,9 @@ function draw() {
           fallTimer = 0;
         }
       }
+    else {
+      savePiece();
+    }
 
       drawPiece(currentPiece, pieceX, pieceY);
     }
@@ -129,6 +144,15 @@ function drawGame() {
       square(x * cellSize, y * cellSize, cellSize);
     }
   }
+
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (board[y][x] === 1) {
+        fill("gray");
+        square(x * cellSize, y * cellSize, cellSize);
+      }
+    }
+  }
 }
 
 function spawnNewShape() {
@@ -162,4 +186,17 @@ function atBottom() {
   else {
     return false;
   }
+}
+
+
+function savePiece() {
+  for (let y = 0; y < currentPiece.length; y++) {
+    for (let x = 0; x < currentPiece[y].length; x++) {
+      if (currentPiece[y][x] === 1) {
+        board[pieceY + y][pieceX + x] = 1;
+      }
+    }
+  }
+
+  spawnNewShape();
 }
