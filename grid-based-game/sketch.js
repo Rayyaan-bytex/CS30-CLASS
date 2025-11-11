@@ -5,7 +5,6 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-
 let gameState = "START";
 let cellSize = 40;
 let cols = 10;
@@ -17,44 +16,49 @@ let fallTimer = 0;
 let fallSpeed = 30;
 let board;
 
+const T = [
+  [1, 1, 1],
+  [0, 1, 0]
+];
 
-const T = [[1, 1, 1],
-  [0, 1, 0]];
+const O = [
+  [1, 1],
+  [1, 1]
+];
 
-const O = [[1, 1],
-  [1, 1]];
+const I = [
+  [1, 1, 1, 1]
+];
 
-const I = [[1, 1, 1, 1]];
+const L = [
+  [1, 0],
+  [1, 0],
+  [1, 1]
+];
 
-const L = [[1, 0],
-  [1, 0], 
-  [1, 1]];
+const S = [
+  [0, 1, 1],
+  [1, 1, 0]
+];
 
-const S = [[0, 1, 1],
-  [1, 1, 0]];
-
-const TETROMINOES = [T, O, I, L, S];  
-
+const TETROMINOES = [T, O, I, L, S];
 const COLORS = ["purple", "yellow", "cyan", "orange", "green"];
-
 
 function setup() {
   createCanvas(500, 500);
-
   rows = floor(windowHeight / cellSize);
   board = [];
 
   for (let y = 0; y < rows; y++) {
     let boardRow = [];
     for (let x = 0; x < cols; x++) {
-      boardRow.push(0);
+      boardRow.push(null); // empty cell
     }
     board.push(boardRow);
   }
 
   createStartButton();
 }
-
 
 function createStartButton() {
   startButton = createButton("START GAME");
@@ -68,61 +72,53 @@ function createStartButton() {
   startButton.mousePressed(startGame);
 }
 
-
 function startGame() {
   startButton.hide();
   gameState = "PLAY";
   spawnNewShape();
 }
 
-
-function resetGame() {
-
-}
-
-
 function draw() {
   background('#56bbe4ff');
-  
+
   if (gameState === "START") {
     drawStartScreen();
   }
+
   else if (gameState === "PLAY") {
     resizeCanvas(400, windowHeight);
-    background('#535364ff');    
-    drawGame();   
+    background('#535364ff');
+    drawGame();
 
     if (currentPiece) {
       fallTimer++;
+
       if (fallTimer > fallSpeed) {
+        // move shape down OR place it
         if (atBottom()) {
           savePiece();
+          spawnNewShape();
         } 
         else {
           pieceY++;
         }
         fallTimer = 0;
       }
+
       drawPiece(currentPiece, pieceX, pieceY);
     }
   }
-
-  else if (gameState === "LOSE") {
-  }
-} 
-
+}
 
 function drawStartScreen() {
   textAlign(CENTER, CENTER);
-  fill(0);
+  fill("white");
   textSize(36);
   textStyle(BOLD);
-  fill("white");
   text("🟥Tetris Game🟥", width / 2, height / 2 - 120);
 
   textSize(25);
   text("⬇️Click The Button Below To Start⬇️", width / 2, height / 2 - 60);
-
   textSize(25);
   text("INSTRUCTIONS", width / 2, height / 2 - 10);
 
@@ -130,30 +126,27 @@ function drawStartScreen() {
   text("• Rotate Falling Shapes To Fit Them Into A Grid\n• Prevent The Stack From The Reaching The Top\n• Complete Solid Horizontal Lines To Score!", width / 2, height / 2 + 45);
 }
 
-
 function drawGame() {
   noFill();
   strokeWeight(2.25);
 
   for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols  ; x++) {
-      square(x * cellSize, y * cellSize, cellSize);
-      if (board[y][x] !== 0) {
+    for (let x = 0; x < cols; x++) {
+      if (board[y][x] !== null) {
         fill(board[y][x]);
-      }
-      else {
+      } else {
         noFill();
       }
-        square(x * cellSize, y * cellSize, cellSize);
+      square(x * cellSize, y * cellSize, cellSize);
     }
   }
 }
 
 function spawnNewShape() {
-  let index = Math.floor(random(TETROMINOES.length));
+  let index = floor(random(TETROMINOES.length));
   currentPiece = TETROMINOES[index];
   currentColor = COLORS[index];
-  pieceX = floor(cols / 2) - floor(currentPiece[0].length / 2 );
+  pieceX = floor(cols / 2) - floor(currentPiece[0].length / 2);
   pieceY = 0;
   fallTimer = 0;
 }
@@ -161,7 +154,6 @@ function spawnNewShape() {
 function drawPiece(shape, posX, posY) {
   fill(currentColor);
   strokeWeight(2.25);
-
   for (let y = 0; y < shape.length; y++) {
     for (let x = 0; x < shape[y].length; x++) {
       if (shape[y][x] === 1) {
@@ -172,16 +164,18 @@ function drawPiece(shape, posX, posY) {
 }
 
 function atBottom() {
-    for (let y = 0; y < currentPiece.length; y++) {
+  for (let y = 0; y < currentPiece.length; y++) {
     for (let x = 0; x < currentPiece[y].length; x++) {
       if (currentPiece[y][x] === 1) {
         let nextY = pieceY + y + 1;
 
+        // if next step is below the board
         if (nextY >= rows) {
           return true;
         }
 
-        if (board[nextY][pieceX + x] !== 0) {
+        // if next cell already has color (stacked block)
+        if (board[nextY][pieceX + x] !== null) {
           return true;
         }
       }
@@ -190,15 +184,36 @@ function atBottom() {
   return false;
 }
 
-
 function savePiece() {
   for (let y = 0; y < currentPiece.length; y++) {
     for (let x = 0; x < currentPiece[y].length; x++) {
-      if (currentPiece[y][x] === 1 && pieceY + y < rows && pieceX + x < cols) {
-        board[pieceY + y][pieceX + x] = currentColor;
+      if (currentPiece[y][x] === 1) {
+        let boardY = pieceY + y;
+        let boardX = pieceX + x;
+
+        if (boardY >= 0 && boardY < rows && boardX >= 0 && boardX < cols) {
+          board[boardY][boardX] = currentColor;
+        }
       }
     }
   }
+}
 
-  spawnNewShape();
+
+function keyPressed() {
+  if (gameState !== "PLAY") {
+    return;
+  }
+  if (key === "a" || key === "A") {
+    pieceX--;
+  }
+  else if (key === "d" || key === "D") {
+    pieceX++;
+  }
+  else if (key === "w" || key === "W") {
+    pieceY--;
+  }
+  else if (key === "a" || key === "A") {
+    pieceY++;
+  }
 }
