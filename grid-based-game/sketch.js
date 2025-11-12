@@ -134,7 +134,8 @@ function drawGame() {
     for (let x = 0; x < cols; x++) {
       if (board[y][x] !== null) {
         fill(board[y][x]);
-      } else {
+      } 
+      else {
         noFill();
       }
       square(x * cellSize, y * cellSize, cellSize);
@@ -169,12 +170,10 @@ function atBottom() {
       if (currentPiece[y][x] === 1) {
         let nextY = pieceY + y + 1;
 
-        // if next step is below the board
         if (nextY >= rows) {
           return true;
         }
 
-        // if next cell already has color (stacked block)
         if (board[nextY][pieceX + x] !== null) {
           return true;
         }
