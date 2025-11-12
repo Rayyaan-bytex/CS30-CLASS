@@ -52,7 +52,7 @@ function setup() {
   for (let y = 0; y < rows; y++) {
     let boardRow = [];
     for (let x = 0; x < cols; x++) {
-      boardRow.push(null); // empty cell
+      boardRow.push(null); 
     }
     board.push(boardRow);
   }
@@ -94,7 +94,6 @@ function draw() {
       fallTimer++;
 
       if (fallTimer > fallSpeed) {
-        // move shape down OR place it
         if (atBottom()) {
           savePiece();
           spawnNewShape();
@@ -128,7 +127,7 @@ function drawStartScreen() {
 
 function drawGame() {
   noFill();
-  strokeWeight(2.25);
+  strokeWeight(1.5);
 
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
@@ -174,7 +173,7 @@ function atBottom() {
           return true;
         }
 
-        if (board[nextY][pieceX + x] !== null) {
+        else if (board[nextY][pieceX + x] !== null) {
           return true;
         }
       }
@@ -199,6 +198,20 @@ function savePiece() {
 }
 
 
+function isValid() {
+  for (let y = 0; y < shape.length; y++) {
+    for (let x = 0; x < shape[y].length; x++) {
+      if (shape[y][x] === 1) {
+        let finalX = newX + x;
+        let finalY = newY + y;
+
+        // if (finalX > )
+      }
+    }
+  }
+}
+
+
 function keyPressed() {
   if (gameState !== "PLAY") {
     return;
@@ -208,11 +221,5 @@ function keyPressed() {
   }
   else if (key === "d" || key === "D") {
     pieceX++;
-  }
-  else if (key === "w" || key === "W") {
-    pieceY--;
-  }
-  else if (key === "a" || key === "A") {
-    pieceY++;
   }
 }
