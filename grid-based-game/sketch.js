@@ -44,6 +44,7 @@ const S = [
   [1, 1, 0]
 ];
 
+
 // Array of all shapes and their colors
 const TETROMINOES = [T, O, I, L, S];
 const COLORS = ["purple", "yellow", "cyan", "orange", "green"];
