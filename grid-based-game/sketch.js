@@ -3,19 +3,21 @@
 // November 12, 2025
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - Used unshift() to make the filled rows disappear and the blocks above move below to the next row
 
-let gameState = "START";
-let cellSize = 40;
-let cols = 10;
-let rows;
-let currentPiece;
-let pieceX;
-let pieceY;
-let fallTimer = 0;
-let fallSpeed = 30;
-let board;
+let gameState = "START";   
+let cellSize = 40;         
+let cols = 10;             
+let rows;                  
+let currentPiece;          
+let pieceX;                
+let pieceY;                
+let fallTimer = 0;         // counts frames before shape moves down
+let fallSpeed = 30;        // how fast the shape falls
+let board;                 
+let startButton;           
 
+// Tetrominoes
 const T = [
   [1, 1, 1],
   [0, 1, 0]
@@ -41,18 +43,21 @@ const S = [
   [1, 1, 0]
 ];
 
+// Array of all shapes and their colors
 const TETROMINOES = [T, O, I, L, S];
 const COLORS = ["purple", "yellow", "cyan", "orange", "green"];
+
 
 function setup() {
   createCanvas(500, 500);
   rows = floor(windowHeight / cellSize);
   board = [];
 
+  // Outer loop makes rows, inner loop fills each cell with null (empty)
   for (let y = 0; y < rows; y++) {
     let boardRow = [];
     for (let x = 0; x < cols; x++) {
-      boardRow.push(null); 
+      boardRow.push(null);    // means this grid spot has no color or block yet
     }
     board.push(boardRow);
   }
@@ -60,6 +65,8 @@ function setup() {
   createStartButton();
 }
 
+
+// Start Button 
 function createStartButton() {
   startButton = createButton("START GAME");
   startButton.style("background-color", "yellow");
@@ -72,12 +79,16 @@ function createStartButton() {
   startButton.mousePressed(startGame);
 }
 
+
+// Starts the game
 function startGame() {
   startButton.hide();
   gameState = "PLAY";
-  spawnNewShape();
+  spawnNewShape();   // create the first falling piece
 }
 
+
+// Main draw loop
 function draw() {
   background('#56bbe4ff');
 
@@ -90,25 +101,30 @@ function draw() {
     background('#535364ff');
     drawGame();
 
+    // Makes the piece fall every few frames using a timer
     if (currentPiece) {
       fallTimer++;
-
       if (fallTimer > fallSpeed) {
         if (atBottom()) {
-          savePiece();
-          spawnNewShape();
+          savePiece();       // save the shape into the board
+          spawnNewShape();   // make a new one
         } 
         else {
-          pieceY++;
+          pieceY++;          // move the shape down
         }
         fallTimer = 0;
       }
-
-      drawPiece(currentPiece, pieceX, pieceY);
+      drawPiece(currentPiece, pieceX, pieceY);  // draw the current falling shape
     }
+  }
+
+  else if (gameState === "GAMEOVER") {
+    drawGameOverScreen();
   }
 }
 
+
+// Start screen instructions
 function drawStartScreen() {
   textAlign(CENTER, CENTER);
   fill("white");
@@ -122,9 +138,24 @@ function drawStartScreen() {
   text("INSTRUCTIONS", width / 2, height / 2 - 10);
 
   textSize(16);
-  text("• Rotate Falling Shapes To Fit Them Into A Grid\n• Prevent The Stack From The Reaching The Top\n• Complete Solid Horizontal Lines To Score!", width / 2, height / 2 + 45);
+  text("• Rotate Falling Shapes To Fit Them Into A Grid\n• Prevent The Stack From Reaching The Top\n• Complete Solid Horizontal Lines To Clear Them!", width / 2, height / 2 + 45);
 }
 
+
+// Game Over Screen
+function drawGameOverScreen() {
+  background("#222");
+  textAlign(CENTER, CENTER);
+  fill("red");
+  textSize(40);
+  text("GAME OVER!", width / 2, height / 2 - 50);
+  fill("white");
+  textSize(18);
+  text("Refresh the page to restart.", width / 2, height / 2 + 50);
+}
+
+
+// Draws the grid and any blocks that have landed
 function drawGame() {
   noFill();
   strokeWeight(1.5);
@@ -132,16 +163,18 @@ function drawGame() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (board[y][x] !== null) {
-        fill(board[y][x]);
+        fill(board[y][x]);   // fill with color if block exists
       } 
       else {
-        noFill();
+        noFill();            // keep it empty if null
       }
       square(x * cellSize, y * cellSize, cellSize);
     }
   }
 }
 
+
+// Picks random shape and color
 function spawnNewShape() {
   let index = floor(random(TETROMINOES.length));
   currentPiece = TETROMINOES[index];
@@ -149,8 +182,15 @@ function spawnNewShape() {
   pieceX = floor(cols / 2) - floor(currentPiece[0].length / 2);
   pieceY = 0;
   fallTimer = 0;
+
+  // If the top space is blocked, that means the game is over
+  if (!isValid(currentPiece, pieceX, pieceY)) {
+    gameState = "GAMEOVER";
+  }
 }
 
+
+// Draws the falling piece square by square
 function drawPiece(shape, posX, posY) {
   fill(currentColor);
   strokeWeight(2.25);
@@ -163,16 +203,18 @@ function drawPiece(shape, posX, posY) {
   }
 }
 
+
+// Checks if shape touches the bottom or another shape
 function atBottom() {
   for (let y = 0; y < currentPiece.length; y++) {
     for (let x = 0; x < currentPiece[y].length; x++) {
       if (currentPiece[y][x] === 1) {
         let nextY = pieceY + y + 1;
 
+        // If it reaches bottom or another block, return true
         if (nextY >= rows) {
           return true;
         }
-
         else if (board[nextY][pieceX + x] !== null) {
           return true;
         }
@@ -182,6 +224,8 @@ function atBottom() {
   return false;
 }
 
+
+// When shape lands, save it to the board permanently
 function savePiece() {
   for (let y = 0; y < currentPiece.length; y++) {
     for (let x = 0; x < currentPiece[y].length; x++) {
@@ -189,37 +233,118 @@ function savePiece() {
         let boardY = pieceY + y;
         let boardX = pieceX + x;
 
+        // Check to make sure inside grid boundaries
         if (boardY >= 0 && boardY < rows && boardX >= 0 && boardX < cols) {
           board[boardY][boardX] = currentColor;
         }
       }
     }
   }
+  clearFullRows();  // check for any completed rows
 }
 
 
-function isValid() {
+// Makes sure shape stays inside board and doesn't hit other blocks
+function isValid(shape, newX, newY) {
   for (let y = 0; y < shape.length; y++) {
     for (let x = 0; x < shape[y].length; x++) {
       if (shape[y][x] === 1) {
         let finalX = newX + x;
         let finalY = newY + y;
 
-        // if (finalX > )
+        // If outside of left or right or bottom edges then not valid
+        if (finalX < 0 || finalX >= cols || finalY >= rows) {
+          return false;
+        }
+
+        // If touching another placed block then not valid
+        if (finalY >= 0 && board[finalY][finalX] !== null) {
+          return false;      
+        }
+      }
+    }
+  }
+  return true;
+}
+
+
+// Movement and rotation with keys
+function keyPressed() {
+  if (gameState === "PLAY") {
+    if (key === "a" || key === "A") { 
+      if (isValid(currentPiece, pieceX - 1, pieceY)) {
+        pieceX--;  // move left
+      }
+    }
+    else if (key === "d" || key === "D") { 
+      if (isValid(currentPiece, pieceX + 1, pieceY)) {
+        pieceX++;  // move right
+      }
+    }
+    else if (key === "s" || key === "S") { 
+      if (isValid(currentPiece, pieceX, pieceY + 1)) {
+        pieceY++;  // move down faster
+      }
+    }
+    else if (key === "w" || key === "W") {
+      let rotated = rotateShape(currentPiece);
+      if (isValid(rotated, pieceX, pieceY)) {
+        currentPiece = rotated;  // rotate if space is clear
       }
     }
   }
 }
 
 
-function keyPressed() {
-  if (gameState !== "PLAY") {
-    return;
+// Checks for filled rows and clears them
+function clearFullRows() {
+  let newBoard = [];
+  let rowsCleared = 0;
+
+  // Go through every row and see if it's completely filled
+  for (let y = 0; y < rows; y++) {
+    let rowIsFull = true;
+
+    // Check every column in the current row
+    for (let x = 0; x < cols; x++) {
+      if (board[y][x] === null) {
+        rowIsFull = false;  // found an empty spot means it is not full
+      }
+    }
+
+    // If row is not full, keep it
+    if (!rowIsFull) {
+      newBoard.push(board[y]);
+    } 
+    else {
+      rowsCleared++;  // count how many full rows we cleared
+    }
   }
-  if (key === "a" || key === "A") {
-    pieceX--;
+
+  // Add empty rows on top for the cleared ones
+  for (let i = 0; i < rowsCleared; i++) {
+    let emptyRow = [];
+    for (let x = 0; x < cols; x++) {
+      emptyRow.push(null);
+    }
+    newBoard.unshift(emptyRow);  // adds new empty rows to the top
   }
-  else if (key === "d" || key === "D") {
-    pieceX++;
+
+  board = newBoard;  // update the main board
+}
+
+
+// Rotates shape clockwise
+function rotateShape(shape) {
+  let newShape = [];
+
+  // Rotates shape by turning its columns into rows
+  for (let x = 0; x < shape[0].length; x++) {
+    let newRow = [];
+    for (let y = shape.length - 1; y >= 0; y--) {
+      newRow.push(shape[y][x]);
+    }
+    newShape.push(newRow);
   }
+  return newShape;
 }
