@@ -5,6 +5,7 @@
 // Extra for Experts:
 // - Used unshift() to make the filled rows disappear and the blocks above move below to the next row
 
+
 let gameState = "START";   
 let cellSize = 40;         
 let cols = 10;             
