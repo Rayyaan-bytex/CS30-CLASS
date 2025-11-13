@@ -3,6 +3,7 @@ html {
   padding: 0;
 }
 
+/* Set the canvas to be at the center of screen */
 body {
   position: absolute;
   top: 50%;
